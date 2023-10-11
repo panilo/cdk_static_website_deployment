@@ -11,7 +11,7 @@ from aws_cdk.aws_cloudfront import (
     ViewerProtocolPolicy,
 )
 from aws_cdk.aws_cloudfront_origins import S3Origin
-from aws_cdk.aws_s3 import BucketAccessControl, BucketEncryption
+from aws_cdk.aws_s3 import BucketAccessControl, BucketEncryption, BlockPublicAccess
 from aws_cdk.aws_s3_deployment import BucketDeployment, Source
 from constructs import Construct
 
@@ -39,9 +39,11 @@ class WebsiteStack(Stack):
             "website_bucket",
             access_control=BucketAccessControl.PRIVATE,
             encryption=BucketEncryption.S3_MANAGED,
+            block_public_access=BlockPublicAccess.BLOCK_ALL,
+            enforce_ssl=True,
+            versioned=False,
+            removal_policy=RemovalPolicy.RETAIN
         )
-
-        website_bucket.apply_removal_policy(RemovalPolicy.DESTROY)
 
         BucketDeployment(
             self,
